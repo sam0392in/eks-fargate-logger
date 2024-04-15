@@ -1,4 +1,4 @@
-# eks-fargate-logger
+# AWS EKS Fargate Logger
 
 ## Overview
 
