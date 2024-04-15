@@ -40,6 +40,32 @@ labels:
 aws-observability: enabled
 ```
 
+- Create below configmap and deploy in above created namespace. Replace the name of firehose with the firehose you created. [ DO NOT COPY PASTE AS IS ]
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-logging
+  namespace: aws-observability
+data:
+  filters.conf: |
+    [FILTER]
+        Name                kubernetes
+        Match               *
+        Merge_Log           On
+        Buffer_Size         0
+        Kube_Meta_Cache_TTL 300s
+
+  flb_log_cw: 'false'
+
+  output.conf: |
+    [OUTPUT]
+        Name kinesis_firehose
+        Match *
+        region eu-west-1
+        delivery_stream <YOUR FIREHOSE NAME>
+```
+
 - Create Fargate profile in EKS, reference: https://docs.aws.amazon.com/eks/latest/userguide/fargate-profile.html
 
 - deploy application
