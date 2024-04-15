@@ -18,7 +18,7 @@ Configure your self-hosted Elasticsearch cluster seamlessly as the target for yo
 Aggregate and analyze your container logs in a centralized location, gaining valuable insights into application behavior and potential issues.
 
 ## Functioning
-![[eks-fargate-logger]]([static/eks-fargate-logger.png])
+![[eks-fargate-logger]]([./static/eks-fargate-logger.png])
 
 ## Prerequisites
 - A running Amazon EKS cluster with Fargate enabled.
