@@ -1,0 +1,76 @@
+replicas: 1
+
+image:
+  repository: "123445566778.dkr.ecr.eu-west-1.amazonaws.com/eks-fargate-logger"
+  tag: 001
+
+containerPort: 3000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  ingressClass: nginx-external
+  host: eks-fargate-logger.sam.io
+  annotations:
+    nginx.ingress.kubernetes.io/load-balance: "ewma"
+
+additionalPodLabels: {}
+#  nature: serverless
+
+
+serviceAccount:
+  enabled: false
+  annotations: {}
+    # eks.amazonaws.com/role-arn: arn:aws:iam::123445566778:role/vector-redis
+
+env:
+  - name: ENVIRONMENT
+    value: dev
+  - name: GIN_MODE
+    value: release
+
+resources:
+  limits:
+   cpu: 500m
+   memory: 512Mi
+  requests:
+   cpu: 100m
+   memory: 128Mi
+
+
+autoscaling:
+  enabled: false
+  # maxReplicas: 5
+  # minReplicas: 1
+  # metric: cpu
+  # avgUtilization: 80
+
+affinity: {}
+  # nodeAffinity:
+  #   requiredDuringSchedulingIgnoredDuringExecution:
+  #     nodeSelectorTerms:
+  #     - matchExpressions:
+  #       - key: nature
+  #         operator: In
+  #         values:
+  #         - stateful
+  # podAntiAffinity:
+  #   preferredDuringSchedulingIgnoredDuringExecution:
+  #   - podAffinityTerm:
+  #       labelSelector:
+  #         matchExpressions:
+  #         - key: project
+  #           operator: In
+  #           values:
+  #           - sam-search-ranking
+  #       topologyKey: kubernetes.io/hostname
+  #     weight: 100
+
+tolerations: []
+# - effect: NoSchedule
+#   key: nature
+#   operator: Equal
+#   value: stateful

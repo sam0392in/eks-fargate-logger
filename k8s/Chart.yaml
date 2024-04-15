@@ -1,0 +1,6 @@
+apiVersion: v1
+name: eks-fargate-logger
+description: eks fargate logger collects logs from fargate and push to ES
+version: "1.4.1"
+maintainers:
+  - name: Samarth Kanungo

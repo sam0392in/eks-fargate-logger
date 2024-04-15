@@ -1,0 +1,71 @@
+
+replicas: 2
+
+image:
+  repository: "998877665544.dkr.ecr.eu-west-1.amazonaws.com/eks-fargate-logger"
+  tag: 001
+
+ingress:
+  enabled: true
+  ingressClass: nginx-external
+  host: eks-fargate-logger.sam.cloud
+  annotations:
+    nginx.ingress.kubernetes.io/load-balance: "ewma"
+
+additionalPodLabels: {}
+#  nature: serverless
+
+serviceAccount:
+  enabled: false
+  annotations: {}
+  # eks.amazonaws.com/role-arn: arn:aws:iam::998877665544:role/eks-fargate-logger
+
+env:
+  - name: ENVIRONMENT
+    value: live
+  - name: GIN_MODE
+    value: release
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+
+autoscaling:
+  enabled: true
+  maxReplicas: 5
+  minReplicas: 1
+  metric: cpu
+  avgUtilization: 80
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: nature
+              operator: In
+              values:
+                - stateful
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - eks-fargate-logger
+          topologyKey: kubernetes.io/hostname
+
+
+tolerations:
+ - effect: NoSchedule
+   key: nature
+   operator: Equal
+   value: stateful
