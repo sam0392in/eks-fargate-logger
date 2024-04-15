@@ -62,7 +62,7 @@ data:
     [OUTPUT]
         Name kinesis_firehose
         Match *
-        region eu-west-1
+        region <AWS REGION>
         delivery_stream <YOUR FIREHOSE NAME>
 ```
 
